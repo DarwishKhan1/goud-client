@@ -1,5 +1,5 @@
 import axios from "axios";
-import { localDomain as apiUrl } from "../Components/utils/utils";
+import { productionDomain as apiUrl } from "../Components/utils/utils";
 
 export const loginAdmin = async (email, pass) => {
   let data = JSON.stringify({ email, password: pass });
