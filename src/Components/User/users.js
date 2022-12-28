@@ -4,7 +4,7 @@ import { deleteUser } from "../../APIS/apis";
 import UsersTable from "./userTable";
 import Spinner from "../Common/Spinner";
 import axios from "axios";
-import { localDomain } from "../utils/utils";
+import { productionDomain } from "../utils/utils";
 import Input from "./../Common/Input";
 import { Link } from "react-router-dom";
 
@@ -19,7 +19,7 @@ const Users = () => {
 
   useEffect(() => {
     fetch(
-      localDomain + `user/pagination/api?page=${pageNumber}&limit=${LIMIT}`,
+      productionDomain + `user/pagination/api?page=${pageNumber}&limit=${LIMIT}`,
       {
         method: "GET",
         headers: {
@@ -55,7 +55,7 @@ const Users = () => {
     };
     var config = {
       method: "post",
-      url: `${localDomain}user/status/${user._id}`,
+      url: `${productionDomain}user/status/${user._id}`,
       headers: {
         "x-auth-header": token,
         "Content-Type": "application/json",
@@ -109,7 +109,7 @@ const Users = () => {
     }
     if (e.key === "Enter") {
       fetch(
-        localDomain +
+        productionDomain +
           `user/search/${e.target.value}?page=${pageNumber}&limit=${LIMIT}`,
         {
           method: "GET",
