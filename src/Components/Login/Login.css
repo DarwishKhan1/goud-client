@@ -13,8 +13,8 @@ body * {
 
 
 .frame {
-  height: 400px;
-  width: 430px;
+  height: 500px;
+  width: 450px;
   background: linear-gradient(rgba(35, 43, 85, 0.75), rgba(35, 43, 85, 0.95)),
     url(https://dl.dropboxusercontent.com/u/22006283/preview/codepen/clouds-cloudy-forest-mountain.jpg)
       no-repeat center center;
@@ -71,7 +71,7 @@ body * {
   font-weight: 300;
   padding-left: 37px;
   padding-right: 37px;
-  padding-top: 25px;
+  padding-top: 10px;
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 

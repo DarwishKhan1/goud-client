@@ -1,14 +1,16 @@
 import React from "react";
-import { loginAdmin } from "../../APIS/apis";
+import { loginAdmin, loginUser } from "../../APIS/apis";
 import { Link, useNavigate } from "react-router-dom";
 import Spinner from "./../Common/Spinner";
 import "./Login.css";
+import { Tab, Tabs } from "react-bootstrap";
 
 class Login extends React.Component {
   state = {
     loading: false,
     email: "",
     password: "",
+    status: "superadmin",
   };
 
   changeHandler = (e) => {
@@ -25,7 +27,12 @@ class Login extends React.Component {
 
     this.setState({ loading: true });
     try {
-      const res = await loginAdmin(email, password);
+      let res;
+      if (this.state.status === "superadmin") {
+        res = await loginAdmin(email, password);
+      } else {
+        res = await loginUser(email, password);
+      }
       this.setState({ loading: false });
       if (res) {
         this.props.navigate("/dashboard");
@@ -37,15 +44,44 @@ class Login extends React.Component {
     }
   };
 
+  selectStatus = (s) => {
+    this.setState({ status: s });
+  };
+
   render() {
     return this.state.loading ? (
       <Spinner />
     ) : (
       <div className="loginContainer">
         <div className="frame">
+          <div className="login-tabs">
+            <Tabs
+              activeKey={this.state.status}
+              id="uncontrolled-tab-example"
+              onSelect={(k) => this.selectStatus(k)}
+            >
+              <Tab
+                eventKey="superadmin"
+                title={
+                  <span className="d-flex justify-content-center  align-items-center">
+                    Super Admin
+                  </span>
+                }
+              ></Tab>
+              <Tab
+                eventKey="admin"
+                title={
+                  <span className="d-flex justify-content-center  align-items-center">
+                    Admin
+                  </span>
+                }
+              ></Tab>
+            </Tabs>
+          </div>
+
           <div className="ct">
-            <h2 className="d-flex justify-content-center text-white mt-5">
-              Login Admin
+            <h2 className="d-flex justify-content-center text-white mt-3">
+              Login
             </h2>
             <form className="form-signin" onSubmit={this.login}>
               <label htmlFor="email">Email</label>

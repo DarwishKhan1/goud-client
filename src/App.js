@@ -34,6 +34,8 @@ import AddCity from "./Components/City/addCity";
 import Cities from "./Components/City/Cities";
 import AddUser from "./Components/User/addUser";
 import WebisteSettings from "./Components/WebsiteSettings/index";
+import Roles from "./Components/Roles/roles";
+import AddRole from "./Components/Roles/addRole";
 
 import "./App.css";
 import ForgotPasswordReset from "./Components/Login/ForgotPasswordReset";
@@ -81,6 +83,8 @@ const App = () => {
           <Route path="/onboardscreendata/add" element={<AddScreenData />} />
           <Route path="/users/add" element={<AddUser />} />
           <Route path="/websitesettings" element={<WebisteSettings />} />
+          <Route path="/roles/add" element={<AddRole />} />
+          <Route path="/roles" element={<Roles />} />
         </Route>
       </Routes>
     </Router>

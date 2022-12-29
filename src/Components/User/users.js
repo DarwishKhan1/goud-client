@@ -1,35 +1,35 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar/Sidebar";
-import { deleteUser } from "../../APIS/apis";
+import {
+  assignUserRoleHandler,
+  deleteUser,
+  getLimitedUsers,
+  getRoles,
+  getSearchingUsers,
+} from "../../APIS/apis";
 import UsersTable from "./userTable";
 import Spinner from "../Common/Spinner";
 import axios from "axios";
 import { productionDomain } from "../utils/utils";
 import Input from "./../Common/Input";
 import { Link } from "react-router-dom";
+import Modal from "../Common/Modal";
+import Select from "../Common/Select";
 
 const LIMIT = 10;
-const token = sessionStorage.getItem("godhadmin");
-
 const Users = () => {
   const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [roleId, setRoleId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    fetch(
-      productionDomain + `user/pagination/api?page=${pageNumber}&limit=${LIMIT}`,
-      {
-        method: "GET",
-        headers: {
-          "x-auth-header": token,
-        },
-      }
-    )
-      .then((res) => res.json())
+    getLimitedUsers(pageNumber, LIMIT)
       .then((result) => {
-        setUsers(result.data);
+        setUsers(result.data.data);
         setTotalPages(result.totalPages);
         setLoading(false);
       })
@@ -102,23 +102,26 @@ const Users = () => {
     }
   };
 
+  const selectHandler = (e) => {
+    setRoleId(e.target.value);
+  };
+
+  const assignRoleHandler = async (id) => {
+    setUserId(id);
+    try {
+      const res = await getRoles();
+      setRoles(res);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   const searchHandler = (e) => {
     if (e.target.value.trim().length <= 0) {
       setPageNumber(1);
       return;
     }
     if (e.key === "Enter") {
-      fetch(
-        productionDomain +
-          `user/search/${e.target.value}?page=${pageNumber}&limit=${LIMIT}`,
-        {
-          method: "GET",
-          headers: {
-            "x-auth-header": token,
-          },
-        }
-      )
-        .then((res) => res.json())
+      getSearchingUsers()
         .then((result) => {
           setUsers(result.data);
           setTotalPages(result.totalPages);
@@ -128,6 +131,18 @@ const Users = () => {
           setLoading(false);
           alert(error.message);
         });
+    }
+  };
+
+  const submitRoleHandler = async () => {
+    try {
+      setLoading(true);
+      await assignUserRoleHandler(userId, roleId);
+      setLoading(false);
+      alert("Role Assigned");
+    } catch (error) {
+      setLoading(false);
+      alert(error.message);
     }
   };
 
@@ -165,6 +180,7 @@ const Users = () => {
             data={users}
             statusHandler={statusHandler}
             deleteUser={deleteUserHandler}
+            assignRoleHandler={assignRoleHandler}
           />
           <div className="d-flex justify-content-end">
             <nav>
@@ -191,6 +207,19 @@ const Users = () => {
           </div>
         </div>
       )}
+      <Modal lebel="Assign Role">
+        <Select
+          name="role"
+          label="Select Role"
+          data={roles}
+          searchValue="name"
+          searchKey="_id"
+          onChange={selectHandler}
+        />
+        <button onClick={submitRoleHandler} className="btn btn-primary px-3">
+          Submit
+        </button>
+      </Modal>
     </Sidebar>
   );
 };

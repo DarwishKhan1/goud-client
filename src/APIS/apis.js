@@ -19,8 +19,46 @@ export const loginAdmin = async (email, pass) => {
     alert("Invalid Credentials.");
     return false;
   }
-  console.log(response);
-  sessionStorage.setItem("godhadmin", response.data.token);
+  sessionStorage.setItem(
+    "godhadmin",
+    JSON.stringify({
+      token: response.data.token,
+      superAdmin: true,
+    })
+  );
+  return true;
+};
+
+export const loginUser = async (email, pass) => {
+  let data = JSON.stringify({ email, password: pass });
+  let config = {
+    method: "post",
+    url: apiUrl + "user/loginwithemail",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+  const response = await axios(config);
+  if (
+    typeof response.data.status !== "undefined" &&
+    response.data.status === "failed"
+  ) {
+    alert("Invalid Credentials.");
+    return false;
+  }
+  if (!response.data.user.role) {
+    alert("You don't have access to this site.");
+    return false;
+  }
+  sessionStorage.setItem(
+    "godhadmin",
+    JSON.stringify({
+      token: response.data.token,
+      superAdmin: false,
+      role: response.data.user.role,
+    })
+  );
   return true;
 };
 export const resetpassword = async (email, oldpassword, password) => {
@@ -37,7 +75,8 @@ export const resetpassword = async (email, oldpassword, password) => {
 };
 
 export const getWeeks = async () => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "get",
     url: apiUrl + "week",
@@ -51,7 +90,8 @@ export const getWeeks = async () => {
 };
 
 export const createWeek = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "week/add",
@@ -65,7 +105,8 @@ export const createWeek = async (data) => {
 };
 
 export const updateWeek = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + `week/update/${id}`,
@@ -78,7 +119,8 @@ export const updateWeek = async (data, id) => {
   await axios(config);
 };
 export const getSymptoms = async () => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "get",
     url: apiUrl + "commonsymptom",
@@ -92,7 +134,8 @@ export const getSymptoms = async () => {
 };
 
 export const createSymptom = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "commonsymptom/add",
@@ -106,7 +149,8 @@ export const createSymptom = async (data) => {
 };
 
 export const updateSymptom = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + `commonsymptom/update/${id}`,
@@ -120,10 +164,11 @@ export const updateSymptom = async (data, id) => {
 };
 
 export const deleteSymptomFromDb = async (id, image) => {
-  const token = sessionStorage.getItem("godhadmin");
   const data = {
     image,
   };
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "delete",
     url: apiUrl + `commonsymptom/delete/${id}`,
@@ -136,7 +181,8 @@ export const deleteSymptomFromDb = async (id, image) => {
 };
 
 export const getArticles = async () => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "get",
     url: apiUrl + "article",
@@ -150,7 +196,8 @@ export const getArticles = async () => {
 };
 
 export const createArticle = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "article/add",
@@ -164,7 +211,8 @@ export const createArticle = async (data) => {
 };
 
 export const updateArticle = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + `article/update/${id}`,
@@ -178,10 +226,11 @@ export const updateArticle = async (data, id) => {
 };
 
 export const deleteArticleFromDb = async (id, image) => {
-  const token = sessionStorage.getItem("godhadmin");
   const data = {
     image,
   };
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "delete",
     url: apiUrl + `article/delete/${id}`,
@@ -194,7 +243,8 @@ export const deleteArticleFromDb = async (id, image) => {
 };
 
 export const getCategories = async () => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "get",
     url: apiUrl + "category",
@@ -207,7 +257,8 @@ export const getCategories = async () => {
 };
 
 export const creatCategory = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "category/add",
@@ -219,8 +270,26 @@ export const creatCategory = async (data) => {
   await axios(config);
 };
 
+export const assignUserRoleHandler = async (uId, roleId) => {
+  const data = {
+    role: roleId,
+  };
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "post",
+    url: apiUrl + "user/role/" + uId,
+    headers: {
+      "x-auth-header": token,
+    },
+    data: data,
+  };
+  await axios(config);
+};
+
 export const updateCategory = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + `category/update/${id}`,
@@ -233,7 +302,8 @@ export const updateCategory = async (data, id) => {
 };
 
 export const deleteCategoryInDb = async (id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "delete",
     url: apiUrl + `category/delete/${id}`,
@@ -245,7 +315,8 @@ export const deleteCategoryInDb = async (id) => {
 };
 
 export const getUsers = async () => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "get",
     url: apiUrl + `user`,
@@ -254,12 +325,37 @@ export const getUsers = async () => {
     },
   };
   const response = await axios(config);
-
   return response.data.data;
+};
+export const getLimitedUsers = async (number, limit) => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "get",
+    url: apiUrl + `user/pagination/api?page=${number}&limit=${limit}`,
+    headers: {
+      "x-auth-header": token,
+    },
+  };
+  return await axios(config);
+};
+
+export const getSearchingUsers = async (term, number, limit) => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "get",
+    url: apiUrl + `user/search/${term}?page=${number}&limit=${limit}`,
+    headers: {
+      "x-auth-header": token,
+    },
+  };
+  return await axios(config);
 };
 
 export const deleteUser = async (id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "delete",
     url: apiUrl + `user/delete/${id}`,
@@ -271,7 +367,8 @@ export const deleteUser = async (id) => {
 };
 
 export const getDoctors = async () => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "get",
     url: apiUrl + `doctor`,
@@ -285,10 +382,11 @@ export const getDoctors = async () => {
 };
 
 export const deleteWeekFromDb = async (id, imageUrl) => {
-  const token = sessionStorage.getItem("godhadmin");
   const data = {
     imageUrl,
   };
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "delete",
     url: apiUrl + `week/delete/${id}`,
@@ -301,7 +399,8 @@ export const deleteWeekFromDb = async (id, imageUrl) => {
 };
 
 export const getEvents = async () => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "get",
     url: apiUrl + "event",
@@ -314,7 +413,8 @@ export const getEvents = async () => {
 };
 
 export const createEvent = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "event/add",
@@ -328,7 +428,8 @@ export const createEvent = async (data) => {
 };
 
 export const updateEvent = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + `event/update/${id}`,
@@ -342,10 +443,11 @@ export const updateEvent = async (data, id) => {
 };
 
 export const deleteEventFromDb = async (id, image) => {
-  const token = sessionStorage.getItem("godhadmin");
   const data = {
     image,
   };
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "delete",
     url: apiUrl + `event/delete/${id}`,
@@ -358,7 +460,8 @@ export const deleteEventFromDb = async (id, image) => {
 };
 
 export const getGuidlines = async () => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "get",
     url: apiUrl + "guidline",
@@ -372,7 +475,8 @@ export const getGuidlines = async () => {
 };
 
 export const createGuidline = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "guidline/add",
@@ -386,7 +490,8 @@ export const createGuidline = async (data) => {
 };
 
 export const updateGuidline = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + `guidline/update/${id}`,
@@ -400,10 +505,11 @@ export const updateGuidline = async (data, id) => {
 };
 
 export const deleteGuidlineFromDb = async (id, image) => {
-  const token = sessionStorage.getItem("godhadmin");
   const data = {
     image,
   };
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "delete",
     url: apiUrl + `guidline/delete/${id}`,
@@ -509,7 +615,8 @@ export const sendEventNotification = async (title, body) => {
     });
 };
 export const createSetting = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "setting/add",
@@ -523,7 +630,8 @@ export const createSetting = async (data) => {
 };
 
 export const updateSetting = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + `setting/update/${id}`,
@@ -585,7 +693,8 @@ export const sendUserStatusNotification = async (user, token) => {
 };
 
 export const getAfterPregnanciesWeekData = async () => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "get",
     url: apiUrl + "afterpregnancy",
@@ -599,7 +708,8 @@ export const getAfterPregnanciesWeekData = async () => {
 };
 
 export const createAfterWeekData = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "afterpregnancy/add",
@@ -613,7 +723,8 @@ export const createAfterWeekData = async (data) => {
 };
 
 export const updateAfterWeekData = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + `afterpregnancy/update/${id}`,
@@ -627,10 +738,11 @@ export const updateAfterWeekData = async (data, id) => {
 };
 
 export const deleteAfterWeekData = async (id, image) => {
-  const token = sessionStorage.getItem("godhadmin");
   const data = {
     image,
   };
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "delete",
     url: apiUrl + `afterpregnancy/delete/${id}`,
@@ -643,7 +755,8 @@ export const deleteAfterWeekData = async (id, image) => {
 };
 
 export const getScreens = async () => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "get",
     url: apiUrl + "onboarding",
@@ -656,7 +769,8 @@ export const getScreens = async () => {
 };
 
 export const addScreen = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "onboarding/add",
@@ -669,7 +783,8 @@ export const addScreen = async (data) => {
 };
 
 export const updateScreen = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + `onboarding/update/${id}`,
@@ -683,10 +798,11 @@ export const updateScreen = async (data, id) => {
 };
 
 export const deleteScreenFromDb = async (id, image) => {
-  const token = sessionStorage.getItem("godhadmin");
   const data = {
     image,
   };
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "delete",
     url: apiUrl + `onboarding/delete/${id}`,
@@ -699,7 +815,8 @@ export const deleteScreenFromDb = async (id, image) => {
 };
 
 export const createDoctor = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "doctor/add",
@@ -713,7 +830,8 @@ export const createDoctor = async (data) => {
 };
 
 export const createUser = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "user/register",
@@ -727,7 +845,8 @@ export const createUser = async (data) => {
 };
 
 export const updateUser = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + `user/update/${id}`,
@@ -741,7 +860,8 @@ export const updateUser = async (data, id) => {
 };
 
 export const updateDoctor = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + `doctor/update/${id}`,
@@ -754,10 +874,11 @@ export const updateDoctor = async (data, id) => {
   await axios(config);
 };
 export const deleteDoctor = async (id, image) => {
-  const token = sessionStorage.getItem("godhadmin");
   const data = {
     image,
   };
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "delete",
     url: apiUrl + `doctor/delete/${id}`,
@@ -770,7 +891,8 @@ export const deleteDoctor = async (id, image) => {
 };
 
 export const getEventCategories = async () => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "get",
     url: apiUrl + "eventCategory",
@@ -783,7 +905,8 @@ export const getEventCategories = async () => {
 };
 
 export const creatEventCategory = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "eventCategory/add",
@@ -796,7 +919,8 @@ export const creatEventCategory = async (data) => {
 };
 
 export const updateEventCategory = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + `eventCategory/update/${id}`,
@@ -809,7 +933,8 @@ export const updateEventCategory = async (data, id) => {
 };
 
 export const deleteEventCategoryInDb = async (id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "delete",
     url: apiUrl + `eventCategory/delete/${id}`,
@@ -822,7 +947,8 @@ export const deleteEventCategoryInDb = async (id) => {
 };
 
 export const getCities = async () => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "get",
     url: apiUrl + "city",
@@ -835,7 +961,8 @@ export const getCities = async () => {
 };
 
 export const creatCity = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "city/add",
@@ -848,7 +975,8 @@ export const creatCity = async (data) => {
 };
 
 export const updateCity = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + `city/update/${id}`,
@@ -861,7 +989,8 @@ export const updateCity = async (data, id) => {
 };
 
 export const deleteCityInDb = async (id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "delete",
     url: apiUrl + `city/delete/${id}`,
@@ -873,7 +1002,8 @@ export const deleteCityInDb = async (id) => {
 };
 
 export const getWebsiteSettings = async () => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "get",
     url: apiUrl + "otpSetting",
@@ -886,7 +1016,8 @@ export const getWebsiteSettings = async () => {
 };
 
 export const createWebsiteSettings = async (data) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "otpSetting/add",
@@ -898,7 +1029,8 @@ export const createWebsiteSettings = async (data) => {
   await axios(config);
 };
 export const updateWebsiteSettings = async (data, id) => {
-  const token = sessionStorage.getItem("godhadmin");
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
   let config = {
     method: "post",
     url: apiUrl + "otpSetting/update/" + id,
@@ -908,4 +1040,59 @@ export const updateWebsiteSettings = async (data, id) => {
     data: data,
   };
   await axios(config);
+};
+
+export const getRoles = async () => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "get",
+    url: apiUrl + "role",
+    headers: {
+      "x-auth-header": token,
+    },
+  };
+  const response = await axios(config);
+  return response.data.data;
+};
+
+export const creatRole = async (data) => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "post",
+    url: apiUrl + "role/add",
+    headers: {
+      "x-auth-header": token,
+    },
+    data: data,
+  };
+  await axios(config);
+};
+
+export const updateRole = async (data, id) => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "post",
+    url: apiUrl + `role/update/${id}`,
+    headers: {
+      "x-auth-header": token,
+    },
+    data: data,
+  };
+  await axios(config);
+};
+
+export const deleteRoleInDb = async (id) => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "delete",
+    url: apiUrl + `role/delete/${id}`,
+    headers: {
+      "x-auth-header": token,
+    },
+  };
+  return await axios(config);
 };

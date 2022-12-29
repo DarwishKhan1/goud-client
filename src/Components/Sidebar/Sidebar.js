@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FaHome, FaUser, FaSymfony } from "react-icons/fa";
+import { FaHome, FaUser, FaSymfony, FaCriticalRole } from "react-icons/fa";
 import {
   BsCalendar2WeekFill,
   BsCalendar2Week,
@@ -7,7 +7,7 @@ import {
 } from "react-icons/bs";
 import { MdOutlineLocationCity, MdContentPaste } from "react-icons/md";
 import { CgScreenShot } from "react-icons/cg";
-import { BiCategory, BiCalendarEvent } from "react-icons/bi";
+import { BiCategory, BiCalendarEvent, BiCalendar } from "react-icons/bi";
 import { FiLogOut, FiSettings } from "react-icons/fi";
 import { RiGuideLine } from "react-icons/ri";
 import { FaHospitalUser } from "react-icons/fa";
@@ -16,8 +16,89 @@ import logo from "../../Assets/logoInWhite.png";
 import { useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
+const SIDEBAR_ITEMS = [
+  {
+    label: "Users",
+    path: "/users",
+    icon: FaUser,
+    key: "users",
+  },
+  {
+    label: "Doctors",
+    path: "/doctors",
+    icon: FaHospitalUser,
+    key: "doctors",
+  },
+  {
+    label: "Before Pregnancy",
+    path: "/weeks",
+    icon: BsCalendar2WeekFill,
+    key: "before_pregnancy",
+  },
+  {
+    label: "After Pregnancy",
+    path: "/afterweek",
+    icon: BsCalendar2Week,
+    key: "after_pregnancy",
+  },
+  {
+    label: "Article Categories",
+    path: "/categories",
+    icon: BiCategory,
+    key: "articles_category",
+  },
+  {
+    label: "Articles",
+    path: "/articles",
+    icon: BsNewspaper,
+    key: "articles",
+  },
+  {
+    label: "Common Symptoms",
+    path: "/symptoms",
+    icon: FaSymfony,
+    key: "common_symptoms",
+  },
+  {
+    label: "Cities",
+    path: "/cities",
+    icon: MdOutlineLocationCity,
+    key: "cities",
+  },
+  {
+    label: "Event Categories",
+    path: "/eventCategories",
+    icon: BiCalendar,
+    key: "events_category",
+  },
+  {
+    label: "Events",
+    path: "/events",
+    icon: BiCalendarEvent,
+    key: "events",
+  },
+  {
+    label: "On Board Screen",
+    path: "/onboardscreendata",
+    icon: CgScreenShot,
+    key: "onboard_screens",
+  },
+  {
+    label: "Guidlines",
+    path: "/guidlines",
+    icon: RiGuideLine,
+    key: "guildines",
+  },
+  {
+    label: "Roles",
+    path: "/roles",
+    icon: FaCriticalRole,
+    key: "roles",
+  },
+];
+
 class Sidebar extends Component {
-  state = { active: false };
+  state = { active: false, items: SIDEBAR_ITEMS };
 
   async componentDidMount() {
     const expanded = localStorage.getItem("expanded");
@@ -26,7 +107,17 @@ class Sidebar extends Component {
         ? this.setState({ active: true })
         : this.setState({ active: false });
     }
+    let role = JSON.parse(sessionStorage.getItem("godhadmin"));
+    if (role && role.role) {
+      const items = SIDEBAR_ITEMS.filter((it) => this.getItemStatus(it.key));
+      this.setState({ items });
+    }
   }
+
+  getItemStatus = (key) => {
+    const admin = JSON.parse(sessionStorage.getItem("godhadmin"));
+    return admin.role[key];
+  };
 
   logout = () => {
     const logout = window.confirm("Are you sure you want to logout?");
@@ -55,64 +146,18 @@ class Sidebar extends Component {
                 </div>
                 <NavItem path="/dashboard" Icon={FaHome} label="Dashboard" />
 
-                <NavItem path="/users" Icon={FaUser} label="Users" />
-
-                <NavItem
-                  path="/doctors"
-                  Icon={FaHospitalUser}
-                  label="Doctors"
-                />
-                <NavItem
-                  path="/weeks"
-                  Icon={BsCalendar2WeekFill}
-                  label="Before Pregnancy"
-                />
-                <NavItem
-                  path="/afterweek"
-                  Icon={BsCalendar2Week}
-                  label="After Pregnancy"
-                />
-                <NavItem
-                  path="/categories"
-                  Icon={BiCategory}
-                  label="Article Category"
-                />
-                <NavItem path="/articles" Icon={BsNewspaper} label="Articles" />
-
-                <NavItem
-                  path="/cities"
-                  Icon={MdOutlineLocationCity}
-                  label="Cities"
-                />
-
-                <NavItem
-                  path="/symptoms"
-                  Icon={FaSymfony}
-                  label="Common Symptoms"
-                />
-                <NavItem
-                  path="/eventCategories"
-                  Icon={BiCategory}
-                  label="Event Category"
-                />
-                <NavItem path="/events" Icon={BiCalendarEvent} label="Events" />
-
-                <NavItem
-                  path="/guidlines"
-                  Icon={RiGuideLine}
-                  label="Guidelines"
-                />
-
-                <NavItem
-                  path="/onboardscreendata"
-                  Icon={CgScreenShot}
-                  label="On Board Screens"
-                />
-
+                {this.state.items.map((item) => (
+                  <NavItem
+                    key={item.label}
+                    path={item.path}
+                    Icon={item.icon}
+                    label={item.label}
+                  />
+                ))}
                 <NavItem
                   path="/websitecontent"
                   Icon={MdContentPaste}
-                  label="Website content"
+                  label="Website Content"
                 />
                 <NavItem
                   path="/websitesettings"

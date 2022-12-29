@@ -358,7 +358,6 @@ label {
   font-size: 1.6rem;
 }
 
-
 .editor {
   /* text-align: center; */
   border: 1px solid grey;
@@ -366,7 +365,22 @@ label {
   margin: 10px 0px;
 }
 
-
 .ql-snow .ql-tooltip {
   left: 50px !important;
+}
+
+.profileMain_portal {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.4rem 0;
+}
+
+.profileMain_portal p {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.profileMain_portal input {
+  width: 20px !important;
+  height: 20px !important;
 }
