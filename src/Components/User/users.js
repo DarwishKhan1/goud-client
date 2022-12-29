@@ -6,6 +6,7 @@ import {
   getLimitedUsers,
   getRoles,
   getSearchingUsers,
+  getUsers,
 } from "../../APIS/apis";
 import UsersTable from "./userTable";
 import Spinner from "../Common/Spinner";
@@ -15,6 +16,7 @@ import Input from "./../Common/Input";
 import { Link } from "react-router-dom";
 import Modal from "../Common/Modal";
 import Select from "../Common/Select";
+import { downloadExcel } from "react-export-table-to-excel";
 
 const LIMIT = 10;
 const Users = () => {
@@ -90,6 +92,55 @@ const Users = () => {
     }
   };
 
+  async function handleDownloadExcel() {
+    const users = await getUsers();
+    const header = [
+      "_id",
+      "fullName",
+      "email",
+      "lat",
+      "lang",
+      "phoneNumber",
+      "status",
+      "lastMenstrualPeriod",
+      "isPregnant",
+      "gender",
+      "expectedDate",
+      "dob",
+      "daysLeft",
+      "country",
+      "city",
+      "age",
+      "role",
+    ];
+    downloadExcel({
+      fileName: "users",
+      sheet: "all-users",
+      tablePayload: {
+        header,
+        body: users.map((item) => ({
+          _id: item._id,
+          fullName: item.fullName,
+          email: item.email,
+          lat: item.lat,
+          lang: item.lang,
+          phoneNumber: item.phoneNumber,
+          status: item.status ? "live" : "block",
+          lastMenstrualPeriod: item.lastMenstrualPeriod,
+          isPregnant: item.isPregnant ? "Yes" : "No",
+          gender: item.gender,
+          expectedDate: item.expectedDate,
+          dob: item.dob,
+          daysLeft: item.daysLeft,
+          country: item.country,
+          city: item.city && item.city.name,
+          age: item.age,
+          role: item.role && item.role.name,
+        })),
+      },
+    });
+  }
+
   const nextHandler = () => {
     if (pageNumber !== totalPages) {
       setPageNumber((p) => p + 1);
@@ -158,13 +209,12 @@ const Users = () => {
               <Input placeholder="Search" onKeyDown={searchHandler} />
             </div>
             <div className="col-sm-3 mt-2">
-              <Link
+              <button
                 className="my-3 btn btn-outline-primary btn-block"
-                to={"/users/print"}
-                state={{ data: users }}
+                onClick={handleDownloadExcel}
               >
                 Export
-              </Link>
+              </button>
             </div>
             <div className="col-sm-3  mt-2">
               <Link
