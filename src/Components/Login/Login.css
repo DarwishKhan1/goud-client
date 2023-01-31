@@ -13,7 +13,7 @@ body * {
 
 
 .frame {
-  height: 500px;
+  height: 400px;
   width: 450px;
   background: linear-gradient(rgba(35, 43, 85, 0.75), rgba(35, 43, 85, 0.95)),
     url(https://dl.dropboxusercontent.com/u/22006283/preview/codepen/clouds-cloudy-forest-mountain.jpg)

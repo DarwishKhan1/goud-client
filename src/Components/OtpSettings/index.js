@@ -8,6 +8,7 @@ import Input from "../Common/Input";
 import Spinner from "../Common/Spinner";
 import Sidebar from "../Sidebar/Sidebar";
 import "./style.css";
+import CryptoJs from "crypto-js";
 
 const WebsiteSetting = () => {
   const [loading, setLoading] = useState(true);
@@ -25,22 +26,27 @@ const WebsiteSetting = () => {
   useEffect(() => {
     getWebsiteSettings()
       .then((res) => {
-        console.log(res);
+        const decrypted = CryptoJs.AES.decrypt(
+          res,
+          process.env.REACT_APP_SECRET
+        );
+        const decryptedData = JSON.parse(decrypted.toString(CryptoJs.enc.Utf8));
         if (res) {
           const d = { ...data };
-          d.businessSMS = res.businessSMS;
-          d.otp = res.otp;
-          d.twillio = res.twillio;
-          d.twillio_account_sid = res.twillio_account_sid;
-          d.twillio_auth_token = res.twillio_auth_token;
-          d.twillio_service_api_key = res.twillio_service_api_key;
-          d.business_sms_key = res.business_sms_key;
+          d.businessSMS = decryptedData.businessSMS;
+          d.otp = decryptedData.otp;
+          d.twillio = decryptedData.twillio;
+          d.twillio_account_sid = decryptedData.twillio_account_sid;
+          d.twillio_auth_token = decryptedData.twillio_auth_token;
+          d.twillio_service_api_key = decryptedData.twillio_service_api_key;
+          d.business_sms_key = decryptedData.business_sms_key;
           setData(d);
-          setId(res._id);
+          setId(decryptedData._id);
         }
         setLoading(false);
       })
       .catch((err) => {
+        console.log(err);
         setLoading(false);
       });
   }, []);
@@ -73,10 +79,18 @@ const WebsiteSetting = () => {
   const submitHandler = async () => {
     try {
       if (id) {
-        await updateWebsiteSettings(data, id);
+        const eData = CryptoJs.AES.encrypt(
+          JSON.stringify(data),
+          process.env.REACT_APP_SECRET
+        ).toString();
+        await updateWebsiteSettings(eData, id);
         alert("Updated!");
       } else {
-        await createWebsiteSettings(data);
+        const eData = CryptoJs.AES.encrypt(
+          JSON.stringify(data),
+          process.env.REACT_APP_SECRET
+        ).toString();
+        await createWebsiteSettings(eData);
         alert("Created!");
       }
     } catch (error) {

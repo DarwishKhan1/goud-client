@@ -23,7 +23,8 @@ export const loginAdmin = async (email, pass) => {
     "godhadmin",
     JSON.stringify({
       token: response.data.token,
-      superAdmin: true,
+      superAdmin: response.data.user.isSuperAdmin,
+      role: response.data.user.role,
     })
   );
   return true;
@@ -858,6 +859,33 @@ export const updateUser = async (data, id) => {
 
   await axios(config);
 };
+export const createMangementUser = async (data) => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "post",
+    url: apiUrl + "admin/add",
+    headers: {
+      "x-auth-header": token,
+    },
+    data: data,
+  };
+  await axios(config);
+};
+export const updateMangementUserRole = async (data, id) => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "post",
+    url: apiUrl + `admin/role/${id}`,
+    headers: {
+      "x-auth-header": token,
+    },
+    data: data,
+  };
+
+  await axios(config);
+};
 
 export const updateDoctor = async (data, id) => {
   let token = JSON.parse(sessionStorage.getItem("godhadmin"));
@@ -1024,7 +1052,7 @@ export const createWebsiteSettings = async (data) => {
     headers: {
       "x-auth-header": token,
     },
-    data: data,
+    data: { data: data },
   };
   await axios(config);
 };
@@ -1037,7 +1065,7 @@ export const updateWebsiteSettings = async (data, id) => {
     headers: {
       "x-auth-header": token,
     },
-    data: data,
+    data: { data: data },
   };
   await axios(config);
 };
@@ -1048,6 +1076,19 @@ export const getRoles = async () => {
   let config = {
     method: "get",
     url: apiUrl + "role",
+    headers: {
+      "x-auth-header": token,
+    },
+  };
+  const response = await axios(config);
+  return response.data.data;
+};
+export const getManagementUsers = async () => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "get",
+    url: apiUrl + "admin",
     headers: {
       "x-auth-header": token,
     },

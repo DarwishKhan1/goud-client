@@ -162,7 +162,7 @@ class Sidebar extends Component {
                 <NavItem
                   path="/websitesettings"
                   Icon={FiSettings}
-                  label="Website Settings"
+                  label="OTP Settings"
                 />
 
                 <li className="pointer">
