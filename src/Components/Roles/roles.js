@@ -62,7 +62,10 @@ class Roles extends Component {
           <Spinner />
         ) : (
           <div>
-            <div className="login-tabs">
+            <div
+              className="login-tabs roles-tabs"
+              style={{ justifyContent: "flex-start", marginBottom: "1rem" }}
+            >
               <Tabs
                 activeKey={this.state.status}
                 id="uncontrolled-tab-example"
@@ -91,12 +94,12 @@ class Roles extends Component {
                 <h2>Management Users</h2>
                 <Link
                   className="btn btn-outline-primary btn-block"
-                  to={"/managmentuser/add"}
+                  to={"/roles/managmentuser/add"}
                   state={{ user: null, roles: this.state.roles }}
                 >
                   Create Management User
                 </Link>
-                <UsersTable data={this.state.users} />
+                <UsersTable data={this.state.users} roles={this.state.roles} />
               </>
             )}
             {this.state.status === "roles" && (

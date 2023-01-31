@@ -4,7 +4,7 @@ import { localDomain } from "../utils/utils";
 import Placeholder from "../../Assets/logoInBlack.png";
 import { Link } from "react-router-dom";
 
-const UserTable = ({ data, statusHandler, deleteUser, assignRoleHandler }) => {
+const UserTable = ({ data, statusHandler, deleteUser }) => {
   const columns = [
     {
       label: "Image",
@@ -62,20 +62,6 @@ const UserTable = ({ data, statusHandler, deleteUser, assignRoleHandler }) => {
             Disable/Enable
           </label>
         </div>
-      ),
-    },
-    {
-      key: "role",
-      label: "",
-      content: (item) => (
-        <button
-          className="btn btn-success"
-          data-target="#paymentmodal"
-          data-toggle="modal"
-          onClick={() => assignRoleHandler(item._id)}
-        >
-          Assign Role
-        </button>
       ),
     },
     {

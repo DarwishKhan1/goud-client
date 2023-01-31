@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar/Sidebar";
 import {
-  assignUserRoleHandler,
   deleteUser,
   getLimitedUsers,
-  getRoles,
   getSearchingUsers,
   getUsers,
 } from "../../APIS/apis";
@@ -14,16 +12,11 @@ import axios from "axios";
 import { productionDomain } from "../utils/utils";
 import Input from "./../Common/Input";
 import { Link } from "react-router-dom";
-import Modal from "../Common/Modal";
-import Select from "../Common/Select";
 import { downloadExcel } from "react-export-table-to-excel";
 
 const LIMIT = 10;
 const Users = () => {
   const [users, setUsers] = useState([]);
-  const [roles, setRoles] = useState([]);
-  const [userId, setUserId] = useState(null);
-  const [roleId, setRoleId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -153,19 +146,7 @@ const Users = () => {
     }
   };
 
-  const selectHandler = (e) => {
-    setRoleId(e.target.value);
-  };
 
-  const assignRoleHandler = async (id) => {
-    setUserId(id);
-    try {
-      const res = await getRoles();
-      setRoles(res);
-    } catch (error) {
-      alert(error.message);
-    }
-  };
   const searchHandler = (e) => {
     if (e.target.value.trim().length <= 0) {
       setPageNumber(1);
@@ -182,18 +163,6 @@ const Users = () => {
           setLoading(false);
           alert(error.message);
         });
-    }
-  };
-
-  const submitRoleHandler = async () => {
-    try {
-      setLoading(true);
-      await assignUserRoleHandler(userId, roleId);
-      setLoading(false);
-      alert("Role Assigned");
-    } catch (error) {
-      setLoading(false);
-      alert(error.message);
     }
   };
 
@@ -230,7 +199,6 @@ const Users = () => {
             data={users}
             statusHandler={statusHandler}
             deleteUser={deleteUserHandler}
-            assignRoleHandler={assignRoleHandler}
           />
           <div className="d-flex justify-content-end">
             <nav>
@@ -257,19 +225,6 @@ const Users = () => {
           </div>
         </div>
       )}
-      <Modal lebel="Assign Role">
-        <Select
-          name="role"
-          label="Select Role"
-          data={roles}
-          searchValue="name"
-          searchKey="_id"
-          onChange={selectHandler}
-        />
-        <button onClick={submitRoleHandler} className="btn btn-primary px-3">
-          Submit
-        </button>
-      </Modal>
     </Sidebar>
   );
 };

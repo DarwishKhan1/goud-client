@@ -4,11 +4,7 @@ import Input from "../Common/Input";
 import Form from "../Common/Form";
 import Joi from "joi";
 import Spinner from "../Common/Spinner";
-import {
-  createMangementUser,
-  sendNotification,
-  updateMangementUser,
-} from "../../APIS/apis";
+import { createMangementUser, updateMangementUserRole } from "../../APIS/apis";
 import { useLocation, useNavigate } from "react-router";
 import Select from "../Common/Select";
 
@@ -22,8 +18,8 @@ class AddManagementUser extends Form {
       name: "",
       email: "",
       role: "",
-      password: "",
     },
+    password: "",
     errors: {},
   };
 
@@ -33,7 +29,6 @@ class AddManagementUser extends Form {
       const data = { ...this.state.data };
       data.name = user.name;
       data.email = user.email;
-      data.password = user.password;
       data.role = user.role;
 
       this.setState({
@@ -48,8 +43,11 @@ class AddManagementUser extends Form {
   objectSchema = {
     name: Joi.string().empty().required(),
     email: Joi.string().empty().required(),
-    password: Joi.string().empty().required(),
     role: Joi.string().empty().required(),
+  };
+
+  changeHandler = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   doSubmit = async () => {
@@ -60,15 +58,14 @@ class AddManagementUser extends Form {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("role", role);
-      formData.append("email", email);
-      formData.append("password", password);
 
       if (this.state.isEditing) {
-        await updateMangementUser(formData, this.state.id);
-        await sendNotification("User", name + " is updated!");
+        await updateMangementUserRole(formData, this.state.id);
       } else {
+        if (password.length <= 0) return alert("password is required");
+        formData.append("email", email);
+        formData.append("password", password);
         await createMangementUser(formData);
-        await sendNotification("User", name + " is created!");
       }
       alert(
         this.state.isEditing
@@ -76,7 +73,7 @@ class AddManagementUser extends Form {
           : "Created successfully!!"
       );
 
-      this.props.navigate("/users");
+      this.props.navigate("/roles");
 
       this.setState({ loading: false });
     } catch (error) {
@@ -108,7 +105,6 @@ class AddManagementUser extends Form {
                   onChange={this.inputHandler}
                   error={errors.name}
                   value={data.name}
-                  disabled={this.state.isEditing}
                   type="text"
                   placeholder="Enter name "
                 />
@@ -133,13 +129,11 @@ class AddManagementUser extends Form {
                   error={this.state.errors.role}
                   value={this.state.data.role}
                 />
-                {this.state.isEditing && (
+                {!this.state.isEditing && (
                   <Input
                     name="password"
                     label="Password"
-                    onChange={this.inputHandler}
-                    error={errors.password}
-                    value={data.password}
+                    onChange={this.changeHandler}
                     type="password"
                     placeholder="Enter password "
                   />
@@ -147,10 +141,7 @@ class AddManagementUser extends Form {
 
                 <button
                   onClick={this.submitForm}
-                  data-toggle="modal"
-                  data-target="#notificationmodel"
                   className="btn primary-button"
-                  disabled={this.state.isEditing}
                 >
                   Submit
                 </button>

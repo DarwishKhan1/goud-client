@@ -384,3 +384,7 @@ label {
   width: 20px !important;
   height: 20px !important;
 }
+
+.roles-tabs button {
+  width: 370px !important;
+}
