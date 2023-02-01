@@ -37,9 +37,10 @@ import OtpSettings from "./Components/OtpSettings/index";
 import Roles from "./Components/Roles/roles";
 import AddRole from "./Components/Roles/addRole";
 import AddManagementUser from "./Components/Roles/addUser";
+import ForgotPasswordReset from "./Components/Login/ForgotPasswordReset";
+import Reports from "./Components/Reports";
 
 import "./App.css";
-import ForgotPasswordReset from "./Components/Login/ForgotPasswordReset";
 
 const App = () => {
   const [path, setPath] = useState("/");
@@ -87,6 +88,7 @@ const App = () => {
           <Route path="/roles/add" element={<AddRole />} />
           <Route path="/roles/managmentuser/add" element={<AddManagementUser />} />
           <Route path="/roles" element={<Roles />} />
+          <Route path="/reports" element={<Reports />} />
         </Route>
       </Routes>
     </Router>

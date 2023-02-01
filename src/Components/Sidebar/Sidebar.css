@@ -39,7 +39,7 @@ body {
 .main_body .sidebar_menu ul li div {
   color: var(--white);
   font-size: 12px;
-  padding: 1px 35px;
+  padding: 0.5px 35px;
   display: block;
   white-space: nowrap;
 }

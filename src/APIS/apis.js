@@ -1137,3 +1137,83 @@ export const deleteRoleInDb = async (id) => {
   };
   return await axios(config);
 };
+
+export const getArticlesReport = async () => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "get",
+    url: apiUrl + "articlereport",
+    headers: {
+      "x-auth-header": token,
+    },
+  };
+  const response = await axios(config);
+  return response.data.data;
+};
+
+export const deleteArticleReport = async (id) => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "delete",
+    url: apiUrl + "articlereport/delete/" + id,
+    headers: {
+      "x-auth-header": token,
+    },
+  };
+  await axios(config);
+};
+
+export const getSocialReport = async () => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "get",
+    url: apiUrl + "socialreport",
+    headers: {
+      "x-auth-header": token,
+    },
+  };
+  const response = await axios(config);
+  return response.data.data;
+};
+
+export const deleteSocialReport = async (id) => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "delete",
+    url: apiUrl + "socialreport/delete/" + id,
+    headers: {
+      "x-auth-header": token,
+    },
+  };
+  await axios(config);
+};
+export const getCommentReport = async () => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "get",
+    url: apiUrl + "commentreport",
+    headers: {
+      "x-auth-header": token,
+    },
+  };
+  const response = await axios(config);
+  return response.data.data;
+};
+
+export const deleteCommentReport = async (id) => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "delete",
+    url: apiUrl + "commentreport/delete/" + id,
+    headers: {
+      "x-auth-header": token,
+    },
+  };
+  await axios(config);
+};

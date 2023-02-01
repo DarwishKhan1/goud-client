@@ -5,6 +5,7 @@ import {
   BsCalendar2Week,
   BsNewspaper,
 } from "react-icons/bs";
+import { GoReport } from "react-icons/go";
 import { MdOutlineLocationCity, MdContentPaste } from "react-icons/md";
 import { CgScreenShot } from "react-icons/cg";
 import { BiCategory, BiCalendarEvent, BiCalendar } from "react-icons/bi";
@@ -158,6 +159,11 @@ class Sidebar extends Component {
                   path="/websitecontent"
                   Icon={MdContentPaste}
                   label="Website Content"
+                />
+                <NavItem
+                  path="/reports"
+                  Icon={GoReport}
+                  label="Reports"
                 />
                 <NavItem
                   path="/websitesettings"

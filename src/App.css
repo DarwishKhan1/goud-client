@@ -138,14 +138,6 @@ label {
     margin-bottom: 5px;
   }
 }
-
-.login-tabs {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 50px;
-}
-
 .login-tabs .nav-tabs {
   border: 0;
 }
@@ -385,6 +377,10 @@ label {
   height: 20px !important;
 }
 
-.roles-tabs button {
+.roles-tabs .nav-link {
+  margin-top: 50px;
   width: 370px !important;
+}
+.report-tabs .nav-link {
+  width: 300px !important;
 }
