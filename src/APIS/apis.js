@@ -1138,6 +1138,32 @@ export const deleteRoleInDb = async (id) => {
   return await axios(config);
 };
 
+export const getUsersRport = async () => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "get",
+    url: apiUrl + "userreport",
+    headers: {
+      "x-auth-header": token,
+    },
+  };
+  const response = await axios(config);
+  return response.data.data;
+};
+
+export const deleteUserReport = async (id) => {
+  let token = JSON.parse(sessionStorage.getItem("godhadmin"));
+  token = token && token.token;
+  let config = {
+    method: "delete",
+    url: apiUrl + "userreport/delete/" + id,
+    headers: {
+      "x-auth-header": token,
+    },
+  };
+  await axios(config);
+};
 export const getArticlesReport = async () => {
   let token = JSON.parse(sessionStorage.getItem("godhadmin"));
   token = token && token.token;

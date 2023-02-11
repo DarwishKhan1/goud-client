@@ -5,6 +5,7 @@ import { useState } from "react";
 import ArticleReport from "./ArticleReport";
 import CommentReport from "./CommentReport";
 import SocialReport from "./ScoialReport";
+import UserReport from "./UserReport";
 const Index = () => {
   const [activeKey, setActiveKey] = useState("Articles");
   return (
@@ -48,6 +49,16 @@ const Index = () => {
             }
           >
             <SocialReport />
+          </Tab>
+          <Tab
+            eventKey="Users"
+            title={
+              <span className="d-flex justify-content-center  align-items-center">
+                Users
+              </span>
+            }
+          >
+            <UserReport />
           </Tab>
         </Tabs>
       </div>
